@@ -34,6 +34,7 @@ export class AuthService {
     }
 
     const tokens = this.tokenService.generateTokens({
+      id: user.id,
       username: user.username,
       role: user.role,
     });
@@ -79,6 +80,7 @@ export class AuthService {
       }
 
       const tokens = this.tokenService.generateTokens({
+        id: user.id,
         username: user.username,
         role: user.role,
       });

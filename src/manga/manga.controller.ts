@@ -6,8 +6,11 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { MangaService } from './manga.service';
 import { CreateMangaDto } from './dto/create-manga.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -36,5 +39,26 @@ export class MangaController {
   @HttpCode(HttpStatus.CREATED)
   async createManga(@Body() manga: CreateMangaDto) {
     return this.mangaService.createManga(manga);
+  }
+
+  @Put(':slug/cover')
+  @UseGuards(AuthGuard)
+  async updateCover(
+    @Param('slug') slug: string,
+    @Body() body: { coverUrl: string },
+  ) {
+    return this.mangaService.updateCover(slug, body.coverUrl);
+  }
+
+  @Put(':slug/rating')
+  @UseGuards(AuthGuard)
+  async updateRating(
+    @Param('slug') slug: string,
+    @Body() body: { rating: number },
+    @Req() req: Request,
+  ) {
+    const user = req['user'];
+
+    return this.mangaService.updateRating(slug, user.id, body.rating);
   }
 }

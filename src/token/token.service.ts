@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Token, TokenDocument } from '../schemas/token.schema';
 import { Model } from 'mongoose';
 import { PayloadDto } from './dto/payload.dto';
-import process from 'node:process';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -48,9 +47,10 @@ export class TokenService {
   validateAccessToken(token: string) {
     try {
       return this.jwtService.verify(token, {
-        secret: process.env.JWT_ACCESS_SECRET,
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       });
     } catch (e) {
+      console.error('Token verification error:', e);
       return null;
     }
   }
@@ -58,7 +58,7 @@ export class TokenService {
   validateRefreshToken(token: string) {
     try {
       return this.jwtService.verify(token, {
-        secret: process.env.JWT_REFRESH_SECRET,
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       });
     } catch (e) {
       return null;

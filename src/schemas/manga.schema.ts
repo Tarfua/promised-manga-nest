@@ -57,10 +57,10 @@ export class Manga {
   tags: string[];
 
   @Prop({ type: Number, default: 0 })
-  totalRating: number;
+  ratingCount: number;
 
   @Prop({ type: Number, default: 0 })
-  ratingCount: number;
+  averageRating: number;
 
   @Prop({ type: MangaDetails, required: true })
   details: MangaDetails;

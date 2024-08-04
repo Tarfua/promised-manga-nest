@@ -14,13 +14,15 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
-    console.log('called');
-
     if (!token) {
       throw new UnauthorizedException('Користувач не авторизований');
     }
     try {
-      request['user'] = this.tokenService.validateAccessToken(token);
+      const user = this.tokenService.validateAccessToken(token);
+      if (!user) {
+        throw new UnauthorizedException('Недійсний токен');
+      }
+      request['user'] = user;
     } catch {
       throw new UnauthorizedException('Користувач не авторизований');
     }
